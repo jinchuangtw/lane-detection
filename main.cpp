@@ -19,6 +19,33 @@ char displayWindowName[] = "Detected Lines (in red) - Probabilistic Line Transfo
 int ts = 0;
 const int max_ts = 100;
 
+vector<Vec4i> slopeFilter(vector<Vec4i> linesP)
+{
+    vector<double> slopes;
+    vector<Vec4i> linesFiltered;
+    double slope_delta = 0.2;
+    double delta_x = linesP[0][0] - linesP[0][2];
+    double delta_y = linesP[0][1] - linesP[0][3];
+    double slope = delta_x / delta_y;
+
+    for (int i = 0; i < linesP.size(); i++)
+    {
+        double delta_x = linesP[i][0] - linesP[i][2];
+        double delta_y = linesP[i][1] - linesP[i][3];
+        double slope = delta_x / delta_y;
+
+        for (int i = 0; i < slopes.size(); i++)
+        {        
+            double slope_up = slope + slope_delta;
+            double slope_low = slope - slope_delta;
+            if (slope > slope_up || slope < slope_low)
+            {
+                slopes.push_back(slope);
+            }
+        }
+    }
+}
+
 vector<Vec4i> lineFilter(vector<Vec4i> linesP)
 {
     vector<Vec4i> linesFiltered;
