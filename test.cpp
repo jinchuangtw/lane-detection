@@ -104,6 +104,7 @@ int main()
     // Show results
     HoughLine(0, 0);
     imshow("after canny", src_blurred);
+    cout << "All operations are finished.\n";
     waitKey(0);
     return 0;
 }
