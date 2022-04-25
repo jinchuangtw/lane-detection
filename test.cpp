@@ -8,8 +8,8 @@ using namespace std;
 using namespace cv;
 
 // Read the video file and do the basic settings
-char filename[] = "../res/airport_lanelines.jpg";
-Mat src = imread(filename, IMREAD_COLOR); // Get the numbers of the frames
+char filename[] = "../fig3.png";
+Mat src = imread(filename, IMREAD_GRAYSCALE); // Get the numbers of the frames
 Mat src_blurred, dst, cdstP;
 
 char displayWindowName[] = "Detected Lines (in red) - Probabilistic Line Transform";
@@ -75,7 +75,7 @@ static void HoughLine(int, void*)
 {
     // Probabilistic Line Transform
     vector<Vec4i> linesP; // will hold the results of the detection
-    HoughLinesP(dst, linesP, 1, CV_PI / 180, ts, 50, 10); // runs the actual detection
+    HoughLinesP(src, linesP, 1, CV_PI / 180, ts, 50, 10); // runs the actual detection
     cout << "Lines detected: " << linesP.size() << endl;
     // vector<Vec4i> lf = lineFilter(linesP);
     // Draw the lines
@@ -92,18 +92,14 @@ int main()
     // Frame operation
     namedWindow(displayWindowName, WINDOW_AUTOSIZE);
     createTrackbar("Threshold", displayWindowName, &ts, max_ts, HoughLine);
-
-    GaussianBlur(src, src_blurred, Size(11, 11), BORDER_DEFAULT);
-
-    // Edge detection
-    Canny(src_blurred, dst, 50, 150);
-
-    // Copy edges to the images that will display the results in BGR
-    cvtColor(dst, cdstP, COLOR_GRAY2BGR);
-
-    // Show results
-    HoughLine(0, 0);
-    imshow("after canny", src_blurred);
+    vector<Vec4i> linesP; // will hold the results of the detection
+    HoughLinesP(src, linesP, 1, CV_PI / 180, ts, 50, 10);
+    for(size_t i = 0; i < linesP.size(); i++)
+    {
+        Vec4i l = linesP[i];
+        line(src, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0, 0, 255), 3, LINE_AA);
+    }
+    imshow(displayWindowName, src);
     cout << "All operations are finished.\n";
     waitKey(0);
     return 0;
