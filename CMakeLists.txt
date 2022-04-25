@@ -8,3 +8,6 @@ target_link_libraries( LaneDetection ${OpenCV_LIBS} )
 
 add_executable( test test.cpp )
 target_link_libraries( test ${OpenCV_LIBS} )
+
+add_executable( revised revised.cpp )
+target_link_libraries( revised ${OpenCV_LIBS} )
